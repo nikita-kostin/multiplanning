@@ -83,32 +83,30 @@ class Search(object):
         return 0
 
     def find_successors(self, node):
-        for i, j in [
-            (node.i, node.j),
-            (node.i, node.j - 1),
-            (node.i, node.j + 1),
-            (node.i - 1, node.j),
-            (node.i + 1, node.j)
-        ]:
-            if not self.map.is_available(node, Node(i, j)):
-                continue
+        for i in range(node.i - 1, node.i + 2):
+            for j in range(node.j - 1, node.j + 2):
+                if not self.options.allowdiagonal and i != node.i and j != node.j:
+                    continue
 
-            successor = Node(i, j)
-            successor.g = node.g + 1
-            successor.h = self.compute_h_from_cell_to_cell(node, successor)
-            successor.f = successor.g + successor.h
-            successor.t = node.t + 1
+                if not self.map.is_available(node, Node(i, j)):
+                    continue
 
-            if (i, j, successor.t) in self.reservations:
-                continue
+                successor = Node(i, j)
+                successor.g = node.g + 1
+                successor.h = self.compute_h_from_cell_to_cell(node, successor)
+                successor.f = successor.g + successor.h
+                successor.t = node.t + 1
 
-            if (i, j, node.t) in self.reservations and (node.i, node.j, successor.t) in self.reservations:
-                continue
+                if (i, j, successor.t) in self.reservations:
+                    continue
 
-            if successor.t >= self.TIME_TO_STOP:
-                continue
+                if (i, j, node.t) in self.reservations and (node.i, node.j, successor.t) in self.reservations:
+                    continue
 
-            yield successor
+                if successor.t >= self.TIME_TO_STOP:
+                    continue
+
+                yield successor
 
     def make_lppath(self, current_node):
         for t in range(current_node.t, self.TIME_TO_STOP):

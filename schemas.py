@@ -103,6 +103,8 @@ class OptionsSchema(Schema):
         validate=validate.Range(min=0.01)
     )
 
+    allowdiagonal = fields.Boolean(missing=False)
+
 
 class InputSchema(Schema):
     map = fields.Nested(

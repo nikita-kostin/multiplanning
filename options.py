@@ -8,3 +8,4 @@ class Options(object):
         self.metrictype = config['options']['metrictype']
         self.hweight = config['options']['hweight']
         self.breakingties = config['options']['breakingties']
+        self.allowdiagonal = config['options']['allowdiagonal']
